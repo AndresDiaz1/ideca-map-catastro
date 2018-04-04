@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>main.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page_wrapper">
+            <div id="jump_page">
+              
+                
+                <a class="source" href="config.html">
+                  config.js
+                </a>
+              
+                
+                <a class="source" href="index.html">
+                  index.js
+                </a>
+              
+                
+                <a class="source" href="main.html">
+                  main.js
+                </a>
+              
+                
+                <a class="source" href="search.html">
+                  search.js
+                </a>
+              
+            </div>
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="main-js">main.js</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Definición de variables del Mapa y del control del GPS</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> map, locateControl, loadingControl;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Definición de las capas de posición, lote y área de geolocalización</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> markerLayer, loteLayer;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Definición de la variable que almacenará los datos requeridos</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> datosBogota;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2 id="ready">Ready</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>$(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+<span class="hljs-meta">  "use strict"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Extensión del Objeto String para incluir función de reemplazar todo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-built_in">String</span>.prototype.replaceAll = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">search, replacement</span>) </span>{
+    <span class="hljs-keyword">var</span> target = <span class="hljs-keyword">this</span>;
+    <span class="hljs-keyword">return</span> target.split(search).join(replacement);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Recorre los servicios y verifica que estos contestan</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> key <span class="hljs-keyword">in</span> urlServices) {
+    <span class="hljs-keyword">if</span> (urlServices.hasOwnProperty(key)) {
+      statServices(urlServices[key]);
+    }
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Inicialización del mapa con ubicación inicial en la Plaza de Bolívar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  map = L.map(<span class="hljs-string">'map'</span>, {
+    <span class="hljs-attr">crs</span>: L.CRS.EPSG3857,
+    <span class="hljs-attr">maxZoom</span>: <span class="hljs-number">20</span>,
+    <span class="hljs-attr">minZoom</span>: <span class="hljs-number">17</span>,
+  }).setView([<span class="hljs-number">4.5981</span>, <span class="hljs-number">-74.0758</span>], <span class="hljs-number">18</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Definición de la atribución del mapa</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  map.attributionControl.addAttribution(<span class="hljs-string">'&lt;a href="https://www.ideca.gov.co" target="_blank"&gt;IDECA, La IDE de Bogotá&lt;/a&gt;'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Definición de las conexiones que apuntan a los servicios de mapas base</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> basemaps = [
+    L.esri.tiledMapLayer({
+      <span class="hljs-attr">url</span>: urlServices.urlHibrido,
+      <span class="hljs-attr">maxZoom</span>: <span class="hljs-number">20</span>
+    }),
+    L.esri.tiledMapLayer({
+      <span class="hljs-attr">url</span>: urlServices.urlBaseMap,
+      <span class="hljs-attr">maxZoom</span>: <span class="hljs-number">20</span>
+    })
+  ];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Creación de un control de leaflet con el logo de IDECA</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> logo = L.control({
+    <span class="hljs-attr">position</span>: <span class="hljs-string">'bottomleft'</span>
+  });
+  logo.onAdd = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">map</span>) </span>{
+    <span class="hljs-keyword">var</span> div = L.DomUtil.create(<span class="hljs-string">'div'</span>, <span class="hljs-string">'myclass'</span>);
+    div.innerHTML = <span class="hljs-string">"&lt;img class='logo' src='http://mapas.bogota.gov.co/images/logo-med.png'/&gt;"</span>;
+    <span class="hljs-keyword">return</span> div;
+  }
+  logo.addTo(map);
+
+  loadingControl = L.Control.loading({
+    <span class="hljs-attr">spinjs</span>: <span class="hljs-literal">true</span>
+  });
+  map.addControl(loadingControl);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Uso del control de intercambio de mapa base</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  map.addControl(L.control.basemaps({
+    <span class="hljs-attr">basemaps</span>: basemaps,
+    <span class="hljs-attr">tileX</span>: <span class="hljs-number">150</span>,
+    <span class="hljs-attr">tileY</span>: <span class="hljs-number">249</span>,
+    <span class="hljs-attr">tileZ</span>: <span class="hljs-number">9</span>
+  }));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Inicialización de las capas de elementos</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  markerLayer = <span class="hljs-keyword">new</span> L.LayerGroup();
+  loteLayer = <span class="hljs-keyword">new</span> L.LayerGroup();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Se agregan las capas al mapa en espera de datos a mostrar</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  markerLayer.addTo(map);
+  loteLayer.addTo(map);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Agrega el control de GPS al mapa</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  locateControl = L.control.locate({
+    <span class="hljs-attr">position</span>: <span class="hljs-string">'topleft'</span>,
+    <span class="hljs-attr">drawCircle</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">drawMarker</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">icon</span>: <span class="hljs-string">'fa fa-location-arrow'</span>,
+    <span class="hljs-attr">enableHighAccuracy</span>: <span class="hljs-literal">true</span>
+  }).addTo(map);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Si se genera un error en la localización por GPS muestra error</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  map.on(<span class="hljs-string">'locationerror'</span>, onLocationError);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Si el usuario da clic en el mapa se recupera las coordenadas
+y se ejecuta la función marcador</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  map.on(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+    marcador(e.latlng);
+  });
+
+  L.control.search().addTo(map);
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <h2 id="marcador">marcador</h2>
+<p>Función que recupera los datos de los servicios geográficos</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <ul>
+<li>latlng: Par coordenado definido por el usuario  </li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">marcador</span>(<span class="hljs-params">latlng</span>) </span>{
+<span class="hljs-meta">  "use strict"</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Detiene el GPS</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  locateControl.stop();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Limpia las capas de datos del mapa</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  loteLayer.clearLayers();
+  markerLayer.clearLayers();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Inicializa la variable de datos</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  datosBogota = constructorDatosBogota();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Crea una marcador con las coordenadas recuperadas del mapa</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> newMarker = <span class="hljs-keyword">new</span> L.marker(latlng);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Adiciona el marcador al mapa</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  newMarker.addTo(markerLayer);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Guarda las coordenadas en la variable datosBogota</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  datosBogota.Coordenadas.latitud = latlng.lat;
+  datosBogota.Coordenadas.Longitud = latlng.lng;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Recupera el Código Postal</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  identifyDatos(urlServices.urlCodigoPostal, latlng, <span class="hljs-string">'all:28'</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resultado</span>) </span>{
+    datosBogota.CodigoPostal = resultado.properties[<span class="hljs-string">"CodigoPostal"</span>];
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Recupera el Estrato</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  identifyDatos(urlServices.urlPlaneacion, latlng, <span class="hljs-string">'all:4'</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resultado</span>) </span>{
+    datosBogota.Estrato = resultado.properties[<span class="hljs-string">"estrato"</span>];
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Recupera el Barrio</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  identifyDatos(urlServices.urlBarrio, latlng, <span class="hljs-string">'all:0'</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resultado</span>) </span>{
+    datosBogota.Barrio = resultado.properties[<span class="hljs-string">"Nombre"</span>].replaceAll(<span class="hljs-string">"_"</span>, <span class="hljs-string">" "</span>);
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Recupera el Sector Catastral</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  identifyDatos(urlServices.urlCatastro, latlng, <span class="hljs-string">'all:36'</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resultado</span>) </span>{
+    datosBogota.Sector = resultado.properties[<span class="hljs-string">"Nombre del sector catastral"</span>];
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Recupera la Localidad</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  identifyDatos(urlServices.urlCatastro, latlng, <span class="hljs-string">'all:47'</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resultado</span>) </span>{
+    datosBogota.Localidad = resultado.properties[<span class="hljs-string">"Nombre de la localidad"</span>];
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Recupera el Código de la Unidad de Planeamiento</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  identifyDatos(urlServices.urlCatastro, latlng, <span class="hljs-string">'all:43'</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resultado</span>) </span>{
+    datosBogota.UPZ.Codigo = resultado.properties[<span class="hljs-string">"Identificador unico de la unidad de planeamiento"</span>];
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Recupera el Nombre de la Unidad de Planeamiento</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  identifyDatos(urlServices.urlCatastro, latlng, <span class="hljs-string">'all:43'</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">false</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resultado</span>) </span>{
+    datosBogota.UPZ.Nombre = resultado.properties[<span class="hljs-string">"Nombre de la unidad de planeamiento"</span>];
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Recupera el Lote catastral</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  identifyDatos(urlServices.urlCatastro, latlng, <span class="hljs-string">'all:37'</span>, <span class="hljs-number">10</span>, <span class="hljs-literal">true</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resultado</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Visualiza el primer lote recuperado</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> lote = L.geoJSON(resultado);
+    lote.addTo(loteLayer);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Recupera el Código del Lote catastral</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> codigoLote = resultado.properties[<span class="hljs-string">"Identificador unico del lote"</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Recupera las placas domiciliarias</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> serviceCatastro = L.esri.mapService({
+      <span class="hljs-attr">url</span>: urlServices.urlCatastro
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Llama al servicio de búsqueda</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    serviceCatastro.find()
+      .layers(<span class="hljs-string">'33'</span>)
+      .text(codigoLote)
+      .fields(<span class="hljs-string">'PDOCLOTE'</span>)
+      .returnGeometry(<span class="hljs-literal">false</span>)
+      .run(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">error, featureCollection, response</span>) </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Recupera la cantidad de placas domiciliarias existentes para el lote</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> cantidad = featureCollection.features.length;
+        <span class="hljs-keyword">if</span> (cantidad == <span class="hljs-number">1</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Contruye la dirección con los datos devueltos</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">var</span> placa = featureCollection.features[<span class="hljs-number">0</span>];
+          datosBogota.Direccion = placa.properties[<span class="hljs-string">"Nomenclatura vial"</span>] + <span class="hljs-string">" "</span> + placa.properties[<span class="hljs-string">"Texto de la placa"</span>];
+        } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Recorre todas las placas domiciliarias del lote</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>; index &lt; featureCollection.features.length; index++) {
+            <span class="hljs-keyword">var</span> placa = featureCollection.features[index];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Si la placa es la principal entra</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            <span class="hljs-keyword">if</span> (placa.properties[<span class="hljs-string">"Tipo de placa"</span>] == <span class="hljs-string">"Principal"</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Contruye la dirección con los datos devueltos</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>              datosBogota.Direccion = placa.properties[<span class="hljs-string">"Nomenclatura vial"</span>] + <span class="hljs-string">" "</span> + placa.properties[<span class="hljs-string">"Texto de la placa"</span>];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Sale del ciclo For</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>              <span class="hljs-keyword">break</span>;
+            }
+          }
+        }
+      });
+  });
+
+  swal(<span class="hljs-string">"IDECA"</span>, <span class="hljs-string">"Información recuperada"</span>, <span class="hljs-string">"success"</span>);
+  <span class="hljs-built_in">console</span>.log(datosBogota);
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h2 id="onlocationerror">onLocationError</h2>
+<p>Función que muestra el mensaje de error del posicionamiento</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onLocationError</span>(<span class="hljs-params">e</span>) </span>{
+  swal(<span class="hljs-string">""</span>, e.message, <span class="hljs-string">"error"</span>);
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <h2 id="statservices">statServices</h2>
+<p>Función que valida el estado de los servicios que consume la aplicación</p>
+<ul>
+<li>urlServicio: URL del servicio a consultar </li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">statServices</span>(<span class="hljs-params">urlServicio</span>) </span>{
+  $.ajax({
+    <span class="hljs-attr">type</span>: <span class="hljs-string">"GET"</span>,
+    <span class="hljs-attr">url</span>: urlServicio + <span class="hljs-string">'/healthcheck?f=json&amp;callback=?'</span>,
+    <span class="hljs-attr">dataType</span>: <span class="hljs-string">"jsonp"</span>,
+    <span class="hljs-attr">async</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">success</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">json</span>) </span>{
+      <span class="hljs-keyword">if</span> (json.currentVersion) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>Servicio OK</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      }
+    },
+    <span class="hljs-attr">error</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>{
+      <span class="hljs-built_in">console</span>.log(e.message);
+    }
+  });
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <h2 id="identifydatos">identifyDatos</h2>
+<p>Función que ejecuta la tarea de identificación sobre el servicio </p>
+<ul>
+<li>urlServicio: URL del servicio a consultar. </li>
+<li>latlng: Par coordenado a consultar. </li>
+<li>layer: ID del layer a consultar en el servicio. </li>
+<li>tolerancia: Número de pixeles dentro de los que el sistema realizará la búsqueda.</li>
+<li>geometria: Define si devuelve la geometría del elemento encontrado. </li>
+<li>callback: Función que recupera la respuesta de la petición. </li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">identifyDatos</span>(<span class="hljs-params">urlServicio, latlng, layer, tolerancia, geometria, callback</span>) </span>{
+  <span class="hljs-keyword">var</span> mapService = L.esri.mapService({
+    <span class="hljs-attr">url</span>: urlServicio
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Ejecuta el llamado de la API REST de ArcGIS Server con la URL del servicio enviado</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  mapService.identify()
+    .on(map)
+    .at([latlng.lat, latlng.lng])
+    .layers(layer)
+    .tolerance(tolerancia)
+    .returnGeometry(geometria)
+    .run(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">error, featureCollection, response</span>) </span>{
+      <span class="hljs-keyword">if</span> (error) {
+        <span class="hljs-built_in">console</span>.log(error.message);
+      } <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>Si recupera registros los devuelve</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">if</span> (featureCollection.features.length &gt; <span class="hljs-number">0</span>) {
+          callback(featureCollection.features[<span class="hljs-number">0</span>]);
+        }
+      }
+    });
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
